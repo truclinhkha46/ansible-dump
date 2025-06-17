@@ -1,0 +1,31 @@
+---
+- name: Playbook ngầu nghễnh kiểu random
+  hosts: all
+  become: true
+
+  vars:
+    quotes:
+      - "Trà đá chill hơn trà sữa"
+      - "Code xong rồi, chưa chắc chạy"
+      - "Ansible không lỗi là Ansible giả"
+      - "Deploy đi rồi tính tiếp"
+      - "Ngầu không cần hỏi"
+
+  tasks:
+
+    - name: Random quote trong terminal
+      debug:
+        msg: "{{ quotes | random }}"
+
+    - name: Tạo file ngầu.txt chứa câu quote ngẫu nhiên
+      copy:
+        dest: /tmp/ngau.txt
+        content: "{{ quotes | random }}\nĐược tạo lúc {{ ansible_date_time.iso8601 }}"
+
+    - name: Chạy lệnh ngẫu nhiên cho vui
+      shell: "{{ item }}"
+      with_random_choice:
+        - echo 'Chào thế giới từ Ansible!'
+        - echo 'Đừng tin vào echo, tin vào hành động'
+        - date
+        - uname -a
